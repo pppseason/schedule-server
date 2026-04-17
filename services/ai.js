@@ -85,11 +85,15 @@ async function callAI(messages, model = TEXT_MODEL) {
   } catch (err) {
     console.error(`[${Date.now()}] ${model} API 失败，耗时: ${Date.now() - start}ms`);
     if (err.response) {
-      console.error('AI API 错误:', err.response.status, JSON.stringify(err.response.data, null, 2));
+      console.error('AI API 错误状态码:', err.response.status);
+      console.error('AI API 错误响应头:', JSON.stringify(err.response.headers, null, 2));
+      console.error('AI API 错误响应体:', JSON.stringify(err.response.data, null, 2));
     } else if (err.code) {
       console.error('AI 请求错误码:', err.code, err.message);
+    } else if (err.request) {
+      console.error('AI 请求无响应:', err.request);
     } else {
-      console.error('AI 请求失败:', err.message);
+      console.error('AI 请求失败:', err.message, err.stack);
     }
     throw err;
   }
