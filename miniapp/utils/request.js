@@ -1,15 +1,13 @@
 function request(options) {
   const app = getApp();
   return new Promise((resolve, reject) => {
-    wx.cloud.callContainer({
-      config: {
-        env: app && app.globalData ? app.globalData.cloudEnv : 'prod-d7gzti9wmaf3faa49'
-      },
-      path: options.url,
+    wx.request({
+      url: 'https://schedule-server-247739-4-1423159736.sh.run.tcloudbase.com' + options.url,
       method: options.method || 'GET',
+      timeout: 30000,
       header: {
-        'X-WX-SERVICE': 'schedule-server',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-WX-OPENID': app.globalData.openid || ''
       },
       data: options.data || {},
       success: (res) => {
@@ -25,7 +23,7 @@ function request(options) {
         }
       },
       fail: (err) => {
-        console.error('callContainer fail:', err);
+        console.error('request fail:', err);
         reject(err);
       }
     });
