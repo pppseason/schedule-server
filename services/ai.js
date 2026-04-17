@@ -4,9 +4,10 @@ require('dotenv').config();
 
 const API_KEY = process.env.AI_API_KEY || '32ca7530-fa27-46a0-b1d0-943b6695720b';
 const BASE_URL = process.env.AI_BASE_URL || 'https://ark.cn-beijing.volces.com/api/coding/v3';
-const MODEL = process.env.AI_MODEL || 'doubao-seed-2.0-mini';
+const TEXT_MODEL = process.env.AI_MODEL || 'doubao-seed-2.0-mini';
+const VISION_MODEL = process.env.AI_VISION_MODEL || 'doubao-seed-2.0-pro'; // 多模态模型用于图片识别
 
-console.log('AI 配置:', { baseUrl: BASE_URL, model: MODEL, hasKey: !!API_KEY, nodeVersion: process.version });
+console.log('AI 配置:', { baseUrl: BASE_URL, textModel: TEXT_MODEL, visionModel: VISION_MODEL, hasKey: !!API_KEY, nodeVersion: process.version });
 
 const TEXT_PARSE_PROMPT = (referenceTime) => `当前时间是 ${referenceTime}（中国北京时间，UTC+8）。
 用户用自然语言输入了一个日程指令，请解析并提取以下信息，以 JSON 格式返回：
@@ -58,14 +59,14 @@ function getAIHeaders() {
   };
 }
 
-async function callAI(messages) {
+async function callAI(messages, model = TEXT_MODEL) {
   const start = Date.now();
   try {
-    console.log(`[${Date.now()}] 开始调用 doubao-seed-2.0-pro API...`);
+    console.log(`[${Date.now()}] 开始调用 ${model} API...`);
     const response = await axios.post(
       `${BASE_URL}/chat/completions`,
       {
-        model: MODEL,
+        model,
         messages,
         temperature: 1
       },
@@ -76,13 +77,13 @@ async function callAI(messages) {
         family: 4 // 强制 IPv4
       }
     );
-    console.log(`[${Date.now()}] doubao-seed-2.0-pro API 响应成功，耗时: ${Date.now() - start}ms`);
+    console.log(`[${Date.now()}] ${model} API 响应成功，耗时: ${Date.now() - start}ms`);
 
     const content = response.data.choices[0].message.content.trim();
     const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     return JSON.parse(jsonStr);
   } catch (err) {
-    console.error(`[${Date.now()}] doubao-seed-2.0-pro API 失败，耗时: ${Date.now() - start}ms`);
+    console.error(`[${Date.now()}] ${model} API 失败，耗时: ${Date.now() - start}ms`);
     if (err.response) {
       console.error('AI API 错误:', err.response.status, JSON.stringify(err.response.data, null, 2));
     } else if (err.code) {
@@ -118,7 +119,7 @@ async function parseScheduleFromImage(base64Image, referenceTime) {
       ]
     }
   ];
-  return callAI(messages);
+  return callAI(messages, VISION_MODEL);
 }
 
 module.exports = {
