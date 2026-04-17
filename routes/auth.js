@@ -15,6 +15,8 @@ router.post('/login', async (req, res) => {
   }
 
   try {
+    console.log('收到登录请求，code:', code);
+    console.log('APPID:', APPID, 'SECRET存在:', !!SECRET);
     // 调用微信接口换openid
     const result = await axios.get('https://api.weixin.qq.com/sns/jscode2session', {
       params: {
@@ -25,6 +27,7 @@ router.post('/login', async (req, res) => {
       }
     });
 
+    console.log('微信接口返回:', result.data);
     const { openid, errcode, errmsg } = result.data;
     if (errcode) {
       console.error('微信登录失败:', errcode, errmsg);
