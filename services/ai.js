@@ -104,10 +104,10 @@ async function parseSchedule(input, referenceTime) {
 }
 
 async function parseScheduleFromImage(base64Image, referenceTime) {
-  // 确保 base64 包含 data URI 前缀
+  // 确保 base64 包含 data URI 前缀，兼容所有图片格式
   const imageUrl = base64Image.startsWith('data:')
     ? base64Image
-    : `data:image/jpeg;base64,${base64Image}`;
+    : `data:image/*;base64,${base64Image}`; // 用通用格式匹配任意图片类型，避免硬编码jpeg导致格式不兼容
 
   const messages = [
     { role: 'system', content: '你是一个日程识别助手，专门从图片（机票、门票、海报等）中提取日程信息。' },
