@@ -15,8 +15,32 @@ router.post('/ai', authMiddleware, async (req, res) => {
   }
 
   try {
-    const referenceTime = new Date().toISOString();
+    // 传递北京时间作为参考时间，避免时区错误
+    const referenceTime = new Date().toLocaleString('zh-CN', { 
+      timeZone: 'Asia/Shanghai', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    });
     const parsed = await parseSchedule(text.trim(), referenceTime);
+
+    // 容错处理：如果start_time无效，默认设置为北京时间往后推2小时
+    if (!parsed.start_time || isNaN(new Date(parsed.start_time).getTime())) {
+      const now = new Date();
+      // 转成北京时间，加2小时
+      const beijingNow = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+      beijingNow.setHours(beijingNow.getHours() + 2);
+      parsed.start_time = beijingNow.toISOString();
+      // 自动设置提醒时间为开始前15分钟
+      if (!parsed.remind_at) {
+        const remindAt = new Date(parsed.start_time);
+        remindAt.setMinutes(remindAt.getMinutes() - 15);
+        parsed.remind_at = remindAt.toISOString();
+      }
+    }
 
     // 统一时间格式为 SQLite 可正确比较的 YYYY-MM-DD HH:mm:ss
     const fmt = (t) => t ? t.replace('T', ' ').replace(/\.\d{3}Z$/, '') : null;
@@ -66,8 +90,32 @@ router.post('/ai-image', authMiddleware, async (req, res) => {
   }
 
   try {
-    const referenceTime = new Date().toISOString();
+    // 传递北京时间作为参考时间，避免时区错误
+    const referenceTime = new Date().toLocaleString('zh-CN', { 
+      timeZone: 'Asia/Shanghai', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    });
     const parsed = await parseScheduleFromImage(image.trim(), referenceTime);
+
+    // 容错处理：如果start_time无效，默认设置为北京时间往后推2小时
+    if (!parsed.start_time || isNaN(new Date(parsed.start_time).getTime())) {
+      const now = new Date();
+      // 转成北京时间，加2小时
+      const beijingNow = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+      beijingNow.setHours(beijingNow.getHours() + 2);
+      parsed.start_time = beijingNow.toISOString();
+      // 自动设置提醒时间为开始前2小时（符合图片识别的默认规则）
+      if (!parsed.remind_at) {
+        const remindAt = new Date(parsed.start_time);
+        remindAt.setMinutes(remindAt.getMinutes() - 120);
+        parsed.remind_at = remindAt.toISOString();
+      }
+    }
 
     const fmt = (t) => t ? t.replace('T', ' ').replace(/\.\d{3}Z$/, '') : null;
 
