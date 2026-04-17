@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const cron = require('node-cron');
 require('dotenv').config();
 
@@ -16,6 +17,7 @@ cron.schedule('*/5 * * * *', () => {
   checkAndSendReminders();
 });
 
+app.use(cors());
 app.use(express.json());
 
 // 健康检查
