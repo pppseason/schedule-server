@@ -72,7 +72,7 @@ async function callAI(messages, model = TEXT_MODEL) {
       },
       {
         headers: getAIHeaders(),
-        timeout: 30000, // 30 秒超时
+        timeout: 60000, // 图片识别需要更长时间，改为60秒超时
         httpsAgent: new https.Agent({ keepAlive: false }), // 禁用 keep-alive 避免连接复用问题
         family: 4 // 强制 IPv4
       }
