@@ -5,7 +5,7 @@ require('dotenv').config();
 const API_KEY = process.env.AI_API_KEY || '32ca7530-fa27-46a0-b1d0-943b6695720b';
 const BASE_URL = process.env.AI_BASE_URL || 'https://ark.cn-beijing.volces.com/api/coding/v3';
 const TEXT_MODEL = process.env.AI_MODEL || 'doubao-seed-2.0-mini';
-const VISION_MODEL = process.env.AI_VISION_MODEL || 'doubao-seed-2.0-pro'; // 多模态模型用于图片识别
+const VISION_MODEL = process.env.AI_VISION_MODEL || 'doubao-vision-1.0'; // 专门的多模态模型用于图片识别，支持图片解析能力
 
 console.log('AI 配置:', { baseUrl: BASE_URL, textModel: TEXT_MODEL, visionModel: VISION_MODEL, hasKey: !!API_KEY, nodeVersion: process.version });
 
