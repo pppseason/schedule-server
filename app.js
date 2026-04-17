@@ -18,7 +18,7 @@ cron.schedule('*/5 * * * *', () => {
 });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // 放大请求体限制到10MB，支持图片base64上传
 
 // 健康检查
 app.get('/', (req, res) => {
