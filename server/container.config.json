@@ -1,0 +1,19 @@
+{
+  "containerPort": 80,
+  "minNum": 1,
+  "maxNum": 2,
+  "cpu": 1,
+  "mem": 2,
+  "policyType": "cpu",
+  "policyThreshold": 80,
+  "envParams": {
+    "NODE_ENV": "production",
+    "AI_API_KEY": "sk-OiFu7MZNZzIpEdWFNHy8ImVHtf0k89Ol5KzFr55s87A7ELnF",
+    "AI_BASE_URL": "https://tokenhub.tencentmaas.com/v1",
+    "AI_MODEL": "doubao-seed-2.0-pro",
+    "WECHAT_APPID": "wxbba514c6a919d753",
+    "WECHAT_SECRET": "fe5fc1e360863f21df50899990cdf1ea",
+    "WECHAT_TEMPLATE_ID": "ib2N8c_bfewQB-zGs7a5bTLGQm_9CGwncb08h2h8hm8"
+  },
+  "customLogs": "stdout"
+}

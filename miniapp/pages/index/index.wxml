@@ -1,0 +1,48 @@
+<view class="container">
+  <!-- 顶部日期切换 -->
+  <view class="date-header">
+    <view class="arrow" bindtap="onPrevDay">‹</view>
+    <view class="date-text">{{currentDateStr}}</view>
+    <view class="arrow" bindtap="onNextDay">›</view>
+  </view>
+
+  <!-- 输入区 -->
+  <view class="input-card">
+    <textarea
+      class="input-area"
+      placeholder="例如：明天下午3点和老板开会，大概1小时\n或上传机票、聊天记录截图获取日程"
+      value="{{inputText}}"
+      bindinput="onInputChange"
+      maxlength="200"
+    />
+    <view class="btn-row">
+      <button class="create-btn" bindtap="onCreateByAI" loading="{{loading}}">
+        {{loading ? 'AI解析中...' : '创建日程'}}
+      </button>
+      <button class="image-btn" bindtap="onUploadImage" loading="{{imageLoading}}">
+        {{imageLoading ? '识别中...' : '📷 识图'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 日程列表 -->
+  <view class="schedule-section">
+    <view class="section-title">今日日程</view>
+    <block wx:if="{{schedules.length > 0}}">
+      <view class="schedule-list">
+        <view class="schedule-item" wx:for="{{schedules}}" wx:key="id">
+          <view class="time-box">
+            <text class="time-start">{{item.start_time.substring(11,16)}}</text>
+            <text wx:if="{{item.end_time}}" class="time-end">{{item.end_time.substring(11,16)}}</text>
+          </view>
+          <view class="content-box">
+            <view class="title">{{item.title}}</view>
+            <view wx:if="{{item.description}}" class="desc">{{item.description}}</view>
+          </view>
+          <view class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="empty-tip">今天还没有日程，快来创建一个吧~</view>
+  </view>
+</view>

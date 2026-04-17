@@ -1,0 +1,29 @@
+<view class="container">
+  <!-- 月份切换 -->
+  <view class="month-header">
+    <view class="arrow" bindtap="onPrevMonth">‹</view>
+    <view class="month-text">{{monthStr}}</view>
+    <view class="arrow" bindtap="onNextMonth">›</view>
+  </view>
+
+  <!-- 星期标题 -->
+  <view class="weekdays">
+    <view class="weekday" wx:for="['日','一','二','三','四','五','六']" wx:key="*this">{{item}}</view>
+  </view>
+
+  <!-- 日历网格 -->
+  <view class="calendar-grid">
+    <view
+      class="day-cell {{item.type === 'empty' ? 'empty' : ''}} {{item.isToday ? 'today' : ''}}"
+      wx:for="{{days}}"
+      wx:key="index"
+      data-date="{{item.date}}"
+      bindtap="onSelectDay"
+    >
+      <text class="day-num">{{item.day}}</text>
+      <view wx:if="{{item.hasSchedule}}" class="dot"></view>
+    </view>
+  </view>
+
+  <view class="tip">点击有标记的日期可查看当日日程</view>
+</view>
