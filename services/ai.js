@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const API_KEY = process.env.AI_API_KEY || '32ca7530-fa27-46a0-b1d0-943b6695720b';
 const BASE_URL = process.env.AI_BASE_URL || 'https://ark.cn-beijing.volces.com/api/coding/v3';
-const MODEL = process.env.AI_MODEL || 'doubao-seed-2.0-pro';
+const MODEL = process.env.AI_MODEL || 'doubao-seed-2.0-mini';
 
 console.log('AI 配置:', { baseUrl: BASE_URL, model: MODEL, hasKey: !!API_KEY, nodeVersion: process.version });
 
